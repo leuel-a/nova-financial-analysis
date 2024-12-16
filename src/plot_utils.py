@@ -1,10 +1,11 @@
 #!/usr/bin/env python
 import numpy as np
 import pandas as pd
-from typing import List
 import matplotlib.pyplot as plt
+from typing import List, Union, Any
 
-def plot_line_chart(x: pd.Series, y: pd.Series) -> None:
+
+def plot_line_chart(x: Union[pd.Series, List[Union[int, str]]], y: Union[pd.Series, List[int]], **kwargs: Any) -> None:
     """
     Plot a line chart for the given datasets
 
@@ -12,21 +13,22 @@ def plot_line_chart(x: pd.Series, y: pd.Series) -> None:
     :param y: The y-axis values
     :return: Nothing
     """
-    plt.figure(figsize=(12, 6))
+    plt.figure(figsize=kwargs.pop('figsize', (12, 6)))
+    plt.title(kwargs.pop('title', ''))
     plt.plot(x, y, marker='o', linestyle='-')
 
-    y_min = min(y)
-    y_max = max(y)
-    y_ticks = np.linspace(y_min, y_max + 1, 10)
+    # y_min = min(y)
+    # y_max = max(y)
+    # y_ticks = np.linspace(y_min, y_max + 1, 10)
 
     plt.xticks(x)
-    plt.yticks(y_ticks)
+    # plt.yticks(y_ticks)
 
     plt.grid(True)
     plt.show()
 
 
-def plot_bar_chart(categories: pd.Series, values: List[int] | pd.Series, color: str = 'skyblue') -> None:
+def plot_bar_chart(categories: List[str], values: List[int] | pd.Series, **kwargs: Any) -> None:
     """
     Plots a bar chart using the provided categories and values.
 
@@ -37,15 +39,30 @@ def plot_bar_chart(categories: pd.Series, values: List[int] | pd.Series, color: 
                    The length of this parameter must match the length of `categories`.
     :type values: List[int] | pd.Series
 
-    :param color: The color of the bars in the chart. Default is 'skyblue'.
-    :type color: str
-
     :returns: None
         This function does not return any value. It displays the bar chart directly.
     """
-    plt.figure(figsize=(12, 6))
-    plt.bar(categories, values, color=color)
+    plt.figure(figsize=kwargs.pop('figsize', (12, 6)))
+    plt.grid(kwargs.pop('grid', False))
 
-    plt.grid(True)
+    plt.bar(categories, values, **kwargs)
+
     plt.show()
 
+
+def plot_pie_chart(sizes: Union[List[int], pd.Series], labels: List[str]) -> None:
+    """
+    Plots a pie chart using the provided sizes.
+
+    :param labels: A list of strings used as labels for the pie chart values
+    :type labels: List[str]
+    :param sizes: A list of integers or a Pandas Series containing the sizes for the pie chart.
+    :type sizes: List[int] | pd.Series
+
+    :returns: None
+        This function does not return any value. It displays the pie chart directly.
+    """
+    plt.figure(figsize=(12, 6))
+    plt.pie(sizes, labels=labels, autopct='%1.1f%%', startangle=140)
+
+    plt.show()
